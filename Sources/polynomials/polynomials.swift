@@ -103,6 +103,20 @@ public struct Polynomial {
     }
     
     
+    public func positiveRoots() throws -> [Double] {
+        var realRoots = try self.realRoots()
+        var positiveRoots = [Double]()
+
+        for root in realRoots {
+            if root > 0 {
+                positiveRoots.append(root)
+            }
+        }
+        
+        return positiveRoots
+    }
+    
+    
     
     public func eigenvalues() throws -> ([Double], [Double]) {
         // Calculates the eigenvalues of the companion matrix using LAPACK and dgeev_
