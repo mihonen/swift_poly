@@ -11,12 +11,12 @@ public struct Polynomial {
     var coeffs = [Double]()
 
     public init(coefficients: Double...) {
-
-        
         self.coeffs = coefficients
-        
     }
     
+    public init(coefficients: [Double]) {
+        self.coeffs = coefficients
+    }
     
     public func degree() -> Int{
         return self.coeffs.count - 1
@@ -31,6 +31,16 @@ public struct Polynomial {
         return self.coeffs[0] == 1.0
     }
     
+    func monicCopy() -> Polynomial {
+        // Returns a monic copy of the polynomial without altering the instance
+        let l = self.leadingCoeff
+
+        var copy = Polynomial(coefficients: self.coeffs)
+        for (idx, coeff) in self.coeffs.enumerated() {
+            copy.coeffs[idx] = coeff / l
+        }
+        return copy
+    }
     
     mutating func makeMonic(){
         // Divides the polynomial with the leading coefficient to make the polynomial monic
@@ -80,9 +90,9 @@ public struct Polynomial {
     
     
     mutating func roots() throws -> [Complex] {
-        self.makeMonic()
+        let cpy = self.monicCopy()
         var roots = [Complex]()
-        let eigenvalues = try eigenvalues()
+        let eigenvalues = try cpy.eigenvalues()
         for (real, img) in zip(eigenvalues.0, eigenvalues.1){
             roots.append(Complex(real: real, img: img))
         }
@@ -91,8 +101,9 @@ public struct Polynomial {
     }
     
     public func realRoots() throws -> [Double] {
+        let cpy = self.monicCopy()
         var realRoots = [Double]()
-        let eigenvalues = try eigenvalues()
+        let eigenvalues = try cpy.eigenvalues()
         for (real, img) in zip(eigenvalues.0, eigenvalues.1){
             if img == 0{
                 realRoots.append(real)
@@ -104,7 +115,7 @@ public struct Polynomial {
     
     
     public func positiveRoots() throws -> [Double] {
-        var realRoots = try self.realRoots()
+        let realRoots = try self.realRoots()
         var positiveRoots = [Double]()
 
         for root in realRoots {
