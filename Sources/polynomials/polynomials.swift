@@ -11,10 +11,31 @@ public struct Polynomial {
     var coeffs = [Double]()
 
     public init(coefficients: Double...) {
-        self.coeffs = coefficients
+        // STRIP LEADING ZEROS
+        var stripped: [Double] = coefficients
+
+        for coeff in coefficients {
+            if coeff == 0.0 {
+                stripped = Array(stripped[1...stripped.count-1])
+            } else {
+                break
+            }
+        }
+        
+        self.coeffs = stripped
     }
     
     public init(coefficients: [Double]) {
+        var stripped: [Double] = coefficients
+
+        for coeff in coefficients {
+            if coeff == 0.0 {
+                stripped = Array(stripped[1...stripped.count-1])
+            } else {
+                break
+            }
+        }
+        
         self.coeffs = coefficients
     }
     
@@ -89,7 +110,7 @@ public struct Polynomial {
     }
     
     
-    mutating func roots() throws -> [Complex] {
+    func roots() throws -> [Complex] {
         let cpy = self.monicCopy()
         var roots = [Complex]()
         let eigenvalues = try cpy.eigenvalues()

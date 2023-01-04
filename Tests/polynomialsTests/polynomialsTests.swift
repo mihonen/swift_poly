@@ -51,4 +51,25 @@ final class polynomialsTests: XCTestCase {
         XCTAssertEqual(allSolutions.count, 0)
     }
     
+    func testWithLeadingZeros() throws {
+        let poly = Polynomial(coefficients: 0, 0, 1.2, 4.4, -23)
+        let sol1 = Complex(real: 2.913010288632714, img: 0)
+        let sol2 = Complex(real: -6.579676955299381,img:  0)
+        var allSolutions = [sol1, sol2]
+
+        let foundRoots = try poly.roots()
+        
+        for foundRoot in foundRoots {
+            for (idx, solution) in allSolutions.enumerated() {
+                if RoundC(z: solution) == RoundC(z: foundRoot) {
+                    allSolutions.remove(at: idx)
+                    break
+                }
+            }
+        }
+        
+        
+        XCTAssertEqual(allSolutions.count, 0)
+    }
+    
 }
