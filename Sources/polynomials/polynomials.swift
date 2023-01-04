@@ -52,7 +52,7 @@ public struct Polynomial {
         return self.coeffs[0] == 1.0
     }
     
-    public func monicCopy() -> Polynomial {
+    func monicCopy() -> Polynomial {
         // Returns a monic copy of the polynomial without altering the instance
         let l = self.leadingCoeff
 
@@ -157,7 +157,7 @@ public struct Polynomial {
         
         var V = try self.companionMatrix()
         
-        var N = __CLPK_integer(self.degree())
+        var N = __CLPK_integer(self.degree() + 1)
         
         var LDA = N
         
