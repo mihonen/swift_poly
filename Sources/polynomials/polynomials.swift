@@ -74,7 +74,7 @@ public struct Polynomial {
     }
     
     private func companionMatrix() throws -> [__CLPK_doublereal] {
-        if !self.monic { throw "Polynomial has to be monic to form companion matrix!" }
+        if !self.monic { throw PolyError.notMonicError("Polynomial has to be monic to form companion matrix!") }
         let n = self.degree()
         
         
