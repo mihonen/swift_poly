@@ -186,8 +186,8 @@ public struct Polynomial {
         dgeev_(&jobvl, &jobvr, &N, &V, &LDA, &wr, &wi, &vl, &ldvl, &vr, &ldvr, &wkOpt, &lWork, &error)
         
         lWork = __CLPK_integer(wkOpt)
-        let workspaceQuery = [Double](repeating: 0, count: 1)
-        var work = [Double](repeating: 0, count: Int(workspaceQuery[0]))
+        let workspaceQuery: Double = 0.0
+        var work = [Double](repeating: 0, count: Int(workspaceQuery))
         
         /* Compute eigen vectors */
         
