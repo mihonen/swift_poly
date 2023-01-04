@@ -157,45 +157,79 @@ public struct Polynomial {
         
         var V = try self.companionMatrix()
         
-        var N = __CLPK_integer(self.degree() + 1)
-        
+        var N = __CLPK_integer(self.degree())
         var LDA = N
+        var ldvl = N
+        var ldvr = N
         
-        var wkOpt = __CLPK_doublereal(0.0)
-        var lWork = __CLPK_integer(-1)
-        
-        var jobvl: Int8 = 86 // 'V'
-        var jobvr: Int8 = 86 // 'V'
-        
-        var error = __CLPK_integer(0)
-        
+        var pivots = [__CLPK_integer](repeating: 0, count: Int(N))
+
+        var error : __CLPK_integer = 0
+        var lwork = __CLPK_integer(-1)
         // Real parts of eigenvalues
         var wr = [Double](repeating: 0, count: Int(N))
         // Imaginary parts of eigenvalues
         var wi = [Double](repeating: 0, count: Int(N))
         // Left eigenvectors
-        var vl = [__CLPK_doublereal](repeating: 0.0, count: Int(N * N))
+        var vl = [__CLPK_doublereal](repeating: 0, count: Int(N*N))
         // Right eigenvectors
-        var vr = [__CLPK_doublereal](repeating: 0.0, count: Int(N * N))
+        var vr = [__CLPK_doublereal](repeating: 0, count: Int(N*N))
+
+        let JOBVL = UnsafeMutablePointer(mutating: ("V" as NSString).utf8String)
+        let JOBVR = UnsafeMutablePointer(mutating: ("V" as NSString).utf8String)
         
-        var ldvl = N
-        var ldvr = N
+        // Query for workspace
+        var workspaceQuery: Double = 0.0
         
-        /* Query and allocate the optimal workspace */
+        dgeev_(JOBVL, JOBVR, &N, &V, &LDA, &wr, &wi, &vl, &ldvl, &vr, &ldvr, &workspaceQuery, &lwork, &error)
+        // size workspace per the results of the query:
+        var workspace = [Double](repeating: 0, count: Int(workspaceQuery))
+        lwork = __CLPK_integer(workspaceQuery)
         
-        dgeev_(&jobvl, &jobvr, &N, &V, &LDA, &wr, &wi, &vl, &ldvl, &vr, &ldvr, &wkOpt, &lWork, &error)
-        
-        lWork = __CLPK_integer(wkOpt)
-        let workspaceQuery: Double = 0.0
-        var work = [Double](repeating: 0, count: Int(workspaceQuery))
-        
-        /* Compute eigen vectors */
-        
-        dgeev_(&jobvl, &jobvr, &N, &V, &LDA, &wr, &wi, &vl, &ldvl, &vr, &ldvr, &work, &lWork, &error)
-        
-        precondition(error == 0, "Failed to compute eigen vectors")
-        
+        dgeev_(JOBVL, JOBVR, &N, &V, &LDA, &wr, &wi, &vl, &ldvl, &vr, &ldvr, &workspace, &lwork, &error)
+
+        if error != 0 {
+            throw PolyError.eigenvalueError("Failed to compute eigenvalues!")
+        }
         return (wr, wi)
+//
+//
+//
+//        var wkOpt = __CLPK_doublereal(0.0)
+//        var lWork = __CLPK_integer(-1)
+//
+//        var jobvl: Int8 = 86 // 'V'
+//        var jobvr: Int8 = 86 // 'V'
+//
+//        var error = __CLPK_integer(0)
+//
+//        // Real parts of eigenvalues
+//        var wr = [Double](repeating: 0, count: Int(N))
+//        // Imaginary parts of eigenvalues
+//        var wi = [Double](repeating: 0, count: Int(N))
+//        // Left eigenvectors
+//        var vl = [__CLPK_doublereal](repeating: 0.0, count: Int(N * N))
+//        // Right eigenvectors
+//        var vr = [__CLPK_doublereal](repeating: 0.0, count: Int(N * N))
+//
+//        var ldvl = N
+//        var ldvr = N
+//
+//        /* Query and allocate the optimal workspace */
+//
+//        dgeev_(&jobvl, &jobvr, &N, &V, &LDA, &wr, &wi, &vl, &ldvl, &vr, &ldvr, &wkOpt, &lWork, &error)
+//
+//        lWork = __CLPK_integer(wkOpt)
+//        let workspaceQuery: Double = 0.0
+//        var work = [Double](repeating: 0, count: Int(workspaceQuery))
+//
+//        /* Compute eigen vectors */
+//
+//        dgeev_(&jobvl, &jobvr, &N, &V, &LDA, &wr, &wi, &vl, &ldvl, &vr, &ldvr, &work, &lWork, &error)
+//
+//        precondition(error == 0, "Failed to compute eigen vectors")
+//
+//        return (wr, wi)
     }
     
 }
