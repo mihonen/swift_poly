@@ -72,4 +72,22 @@ final class polynomialsTests: XCTestCase {
         XCTAssertEqual(allSolutions.count, 0)
     }
     
+    
+    
+    func testBug() throws {
+        let a = 0.0
+        let b = 0.0
+        let c = 0.3020537512176589
+        let d = -0.5198799754928999
+        let e = 0.2543260291593869
+        
+        
+        for _ in 0...10 {
+            let poly = Polynomial(coefficients: a, b, c, d, e)
+            
+            let roots = try poly.positiveRoots()
+            print(roots)
+        }
+    }
+    
 }

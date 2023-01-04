@@ -52,7 +52,7 @@ public struct Polynomial {
         return self.coeffs[0] == 1.0
     }
     
-    func monicCopy() -> Polynomial {
+    public func monicCopy() -> Polynomial {
         // Returns a monic copy of the polynomial without altering the instance
         let l = self.leadingCoeff
 
