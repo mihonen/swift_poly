@@ -23,6 +23,7 @@ public struct Polynomial {
         }
         
         self.coeffs = stripped
+        self.roundCoeffs()
     }
     
     public init(coefficients: [Double]) {
@@ -37,7 +38,17 @@ public struct Polynomial {
         }
         
         self.coeffs = coefficients
+        self.roundCoeffs()
     }
+    
+    
+    mutating func roundCoeffs(){
+        // ROUND
+        for (idx, coeff) in self.coeffs.enumerated() {
+            self.coeffs[idx] = Round(value: coeff)
+        }
+    }
+    
     
     public func degree() -> Int{
         return self.coeffs.count - 1
