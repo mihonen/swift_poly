@@ -23,7 +23,6 @@ public struct Polynomial {
         }
         
         self.coeffs = stripped
-        self.roundCoeffs()
     }
     
     public init(coefficients: [Double]) {
@@ -38,7 +37,6 @@ public struct Polynomial {
         }
         
         self.coeffs = coefficients
-        self.roundCoeffs()
     }
     
     
