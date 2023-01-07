@@ -85,7 +85,7 @@ public struct Polynomial {
     private func companionMatrix() throws -> [__CLPK_doublereal] {
         if !self.monic { throw PolyError.notMonicError("Polynomial has to be monic to form companion matrix!") }
         let n = self.degree()
-        
+        if n == 0 { return [Double]() }
         
         let c = [Double](repeating: 0, count: n)
         var mat = [[Double]](repeating: c, count: n)
@@ -163,6 +163,9 @@ public struct Polynomial {
         // Calculates the eigenvalues of the companion matrix using LAPACK and dgeev_
         // https://netlib.org/lapack/explore-html/d9/d8e/group__double_g_eeigen_ga66e19253344358f5dee1e60502b9e96f.html
         // returns two arrays A and B, A holds the real parts and B the imaginary parts
+        if self.degree() == 0 {
+            return ([Double](), [Double]())
+        }
         
         var V = try self.companionMatrix()
         
