@@ -71,6 +71,31 @@ final class polynomialsTests: XCTestCase {
         
         XCTAssertEqual(allSolutions.count, 0)
     }
+    func testQuadratic() throws {
+        let a = -3.0
+        let b =  1.33
+        let c = -2.5
 
+        let solution1 = Complex(real: 0.22166666666666, img: -0.88554910774176)
+        let solution2 = Complex(real: 0.22166666666666, img: +0.88554910774176)
+        
+        
+
+        let test_poly = Polynomial(coefficients: a, b, c)
+
+        let roots = try test_poly.roots()
+        
+
+
+
+
+        XCTAssertEqual(roots.count,  2)
+        XCTAssertEqual(RoundC(z: roots[0]),  RoundC(z: solution1))
+        XCTAssertEqual(RoundC(z: roots[1]),  RoundC(z: solution2))
+
+    }
     
 }
+
+
+

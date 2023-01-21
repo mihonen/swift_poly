@@ -26,7 +26,6 @@ func Round(value: Double) -> Double {
 
 
 
-
 // Complex Round
 func RoundC(z: Complex) -> Complex {
     let n = pow(10.0, Double(roundingDecimalPlaces))

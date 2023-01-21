@@ -10,6 +10,7 @@ import Foundation
 
 enum PolyError: Error {
     case notMonicError(String)
+    case notQuadraticError(String)
     case eigenvalueError(String)
 }
 

@@ -9,7 +9,7 @@ import Foundation
 
 
 
-struct Complex {
+struct Complex: Equatable {
     var real: Double
     var img: Double
     
